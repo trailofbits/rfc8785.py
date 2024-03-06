@@ -172,6 +172,7 @@ def dumps(obj: _Value) -> bytes:
     Perform JCS serialization of `obj`, returning the canonical serialization
     as `bytes`.
     """
+    # TODO: Optimize this?
     sink = BytesIO()
     dump(obj, sink)
     return sink.getvalue()
@@ -199,6 +200,7 @@ def dump(obj: _Value, sink: IO[bytes]) -> None:
             sink.write(b"null")
         case list() | tuple():
             if not obj:
+                # Optimization for empty lists.
                 sink.write(b"[]")
                 return
 
@@ -210,6 +212,7 @@ def dump(obj: _Value, sink: IO[bytes]) -> None:
             sink.write(b"]")
         case dict():
             if not obj:
+                # Optimization for empty dicts.
                 sink.write(b"{}")
                 return
 
