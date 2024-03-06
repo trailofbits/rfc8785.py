@@ -1,0 +1,35 @@
+name: Full ES6 floating point tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    paths:
+      - "src/rfc8785/_impl.py"
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        python:
+          - "3.10"
+          - "3.11"
+          - "3.12"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: "pip"
+          cache-dependency-path: pyproject.toml
+
+      - name: download es6 test file
+        run: |
+          curl -O test/assets/es6testfile100m.txt.gz \
+            https://github.com/cyberphone/json-canonicalization/releases/download/es6testfile/es6testfile100m.txt.gz
+
+      - name: test
+        run: make test INSTALL_EXTRA=test
