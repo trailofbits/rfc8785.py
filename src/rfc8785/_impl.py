@@ -199,6 +199,7 @@ def dump(obj: _Value, sink: IO[bytes]) -> None:
             sink.write(b"null")
         case list() | tuple():
             if not obj:
+                # Optimization for empty lists.
                 sink.write(b"[]")
                 return
 
@@ -210,6 +211,7 @@ def dump(obj: _Value, sink: IO[bytes]) -> None:
             sink.write(b"]")
         case dict():
             if not obj:
+                # Optimization for empty dicts.
                 sink.write(b"{}")
                 return
 
