@@ -172,6 +172,7 @@ def dumps(obj: _Value) -> bytes:
     Perform JCS serialization of `obj`, returning the canonical serialization
     as `bytes`.
     """
+    # TODO: Optimize this?
     sink = BytesIO()
     dump(obj, sink)
     return sink.getvalue()
