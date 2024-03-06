@@ -14,9 +14,6 @@ ifeq ($(OS),Windows_NT)
 	VENV_BIN := $(VENV)/Scripts
 endif
 
-# Optionally overridden by the user in the `release` target.
-BUMP_ARGS :=
-
 # Optionally overridden by the user in the `test` target.
 TESTS :=
 
