@@ -67,4 +67,4 @@ Where noted, parts of this implementation are adapted from [Andrew Rundgren's re
 
 [Andrew Rundgren's reference implementation]: https://github.com/cyberphone/json-canonicalization/tree/master/python3
 
-[here]: foo
+[here]: https://trailofbits.github.io/rfc8785.py
