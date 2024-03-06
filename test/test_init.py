@@ -24,3 +24,11 @@ def test_roundtrip(vector, name):
 
     actual_deserialized = json.loads(actual_output)
     assert actual_deserialized == py_input
+
+
+def test_exception_hierarchy():
+    assert issubclass(rfc8785.CanonicalizationError, ValueError)
+    assert issubclass(rfc8785.IntegerDomainError, rfc8785.CanonicalizationError)
+    assert issubclass(rfc8785.FloatDomainError, rfc8785.CanonicalizationError)
+    assert not issubclass(rfc8785.IntegerDomainError, rfc8785.FloatDomainError)
+    assert not issubclass(rfc8785.FloatDomainError, rfc8785.IntegerDomainError)

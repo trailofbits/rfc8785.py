@@ -72,3 +72,26 @@ def test_es6_float_stringification_full(es6_test_file):
 
             actual = sink.getvalue().decode()
             assert actual == expected
+
+
+def test_integer_domain():
+    impl.dumps(impl._INT_MAX)
+    with pytest.raises(impl.IntegerDomainError):
+        impl.dumps(impl._INT_MAX + 1)
+
+    impl.dumps(impl._INT_MIN)
+    with pytest.raises(impl.IntegerDomainError):
+        impl.dumps(impl._INT_MIN - 1)
+
+
+def test_string_invalid_utf8():
+    # escaped surrogate is fine
+    impl.dumps("\\udead")
+    with pytest.raises(impl.CanonicalizationError):
+        impl.dumps("\udead")
+
+
+def test_dumps_invalid_type():
+    with pytest.raises(impl.CanonicalizationError):
+        # set is not serializable
+        impl.dumps({1, 2, 3})
