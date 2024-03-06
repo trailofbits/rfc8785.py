@@ -28,7 +28,7 @@ jobs:
 
       - name: download es6 test file
         run: |
-          curl -O test/assets/es6testfile100m.txt.gz \
+          curl -o test/assets/es6testfile100m.txt.gz \
             https://github.com/cyberphone/json-canonicalization/releases/download/es6testfile/es6testfile100m.txt.gz
 
       - name: test
