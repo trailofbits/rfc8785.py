@@ -60,12 +60,16 @@ def test_es6_float_stringification_full(es6_test_file):
     if not es6_test_file.is_file():
         pytest.skip(f"no {es6_test_file}, skipping")
 
+    # TODO: Thread or otherwise chunk this; it's ridiculously slow for
+    # 100M testcases.
     with gzip.open(es6_test_file, mode="rt") as io:
         for line in io:
             line = line.rstrip()
             hex_ieee, expected = line.split(",", 1)
-            bytes_ieee = bytearray.fromhex(hex_ieee)
-            (float_ieee,) = struct.unpack(">d", bytes_ieee)
+            # `hex_ieee` is not consistently padded, so we have to do
+            # things the annoying way: convert it into an int, pack the int
+            # as u64be, and then unpack into a float64be.
+            (float_ieee,) = struct.unpack(">d", struct.pack(">Q", int(hex_ieee, 16)))
 
             sink = BytesIO()
             impl._serialize_float(float_ieee, sink)

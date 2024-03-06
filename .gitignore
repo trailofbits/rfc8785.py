@@ -6,3 +6,6 @@ __pycache__/
 .idea
 html/
 dist/
+
+# ignore any local copy of the es6 floating tests
+test/assets/es6testfile100m.txt.gz
