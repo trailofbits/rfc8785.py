@@ -49,6 +49,9 @@ class IntegerDomainError(CanonicalizationError):
     """
 
     def __init__(self, n: int) -> None:
+        """
+        Initialize an `IntegerDomainError`.
+        """
         super().__init__(f"{n} exceeds safe integer domain for JSON floats")
 
 
@@ -59,6 +62,10 @@ class FloatDomainError(CanonicalizationError):
     """
 
     def __init__(self, f: float) -> None:
+        """
+        Initialize an `FloatDomainError`.
+        """
+
         super().__init__(f"{f} is not representable in JCS")
 
 
