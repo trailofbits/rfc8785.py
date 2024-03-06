@@ -34,7 +34,7 @@ dev = ["rfc8785[doc,test,lint]", "twine", "wheel", "build"]
 
 [project.urls]
 Homepage = "https://pypi.org/project/rfc8785"
-Documentation = "https://trailofbits.github.io/rfc8785/"
+Documentation = "https://trailofbits.github.io/rfc8785.py/"
 Issues = "https://github.com/trailofbits/rfc8785/issues"
 Source = "https://github.com/trailofbits/rfc8785"
 
