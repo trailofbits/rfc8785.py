@@ -1,4 +1,4 @@
-# rfc8785
+# rfc8785.py
 
 <!--- BADGES: START --->
 [![CI](https://github.com/trailofbits/rfc8785.py/actions/workflows/tests.yml/badge.svg)](https://github.com/trailofbits/rfc8785.py/actions/workflows/tests.yml)
