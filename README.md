@@ -1,7 +1,7 @@
 # rfc8785
 
 <!--- BADGES: START --->
-[![CI](https://github.com/trailofbits/rfc8785/actions/workflows/tests.yml/badge.svg)](https://github.com/trailofbits/rfc8785/actions/workflows/tests.yml)
+[![CI](https://github.com/trailofbits/rfc8785.py/actions/workflows/tests.yml/badge.svg)](https://github.com/trailofbits/rfc8785.py/actions/workflows/tests.yml)
 [![PyPI version](https://badge.fury.io/py/rfc8785.svg)](https://pypi.org/project/rfc8785)
 [![Packaging status](https://repology.org/badge/tiny-repos/python:rfc8785.svg)](https://repology.org/project/python:rfc8785/versions)
 <!--- BADGES: END --->
