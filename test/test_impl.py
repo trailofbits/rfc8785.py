@@ -3,7 +3,9 @@ Internal implementation tests.
 """
 
 import gzip
+import json
 import struct
+from enum import IntEnum
 from io import BytesIO
 
 import pytest
@@ -99,3 +101,14 @@ def test_dumps_invalid_type():
     with pytest.raises(impl.CanonicalizationError):
         # set is not serializable
         impl.dumps({1, 2, 3})
+
+
+def test_dumps_intenum():
+    # IntEnum is a subclass of int, so this should work transparently.
+    class X(IntEnum):
+        A = 1
+        B = 2
+        C = 9001
+
+    raw = impl.dumps([X.A, X.B, X.C])
+    assert json.loads(raw) == [1, 2, 9001]
