@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import math
 import re
+from enum import IntEnum
 from io import BytesIO
 from typing import IO
 
@@ -189,6 +190,12 @@ def dump(obj: _Value, sink: IO[bytes]) -> None:
             else:
                 sink.write(b"false")
         case int():
+            # Annoyance: IntEnum is an int, but prior to 3.11 str(IntEnum)
+            # returns the field repr and not the int itself. Unwrap it.
+            # TODO: Remove this after 3.10 is dropped.
+            if isinstance(obj, IntEnum):
+                obj = obj.value
+
             if obj < _INT_MIN or obj > _INT_MAX:
                 raise IntegerDomainError(obj)
             sink.write(str(obj).encode("utf-8"))
