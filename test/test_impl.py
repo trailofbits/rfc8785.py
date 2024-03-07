@@ -5,6 +5,7 @@ Internal implementation tests.
 import gzip
 import json
 import struct
+import sys
 from enum import IntEnum, StrEnum
 from io import BytesIO
 
@@ -114,6 +115,7 @@ def test_dumps_intenum():
     assert json.loads(raw) == [1, 2, 9001]
 
 
+@pytest.mark.skipif(sys.version_info < (3, 11), reason="StrEnum added in 3.11+")
 def test_dumps_strenum():
     # StrEnum is a subclass of str, so this should work transparently.
     class X(StrEnum):
