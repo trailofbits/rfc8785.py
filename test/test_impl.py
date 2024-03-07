@@ -6,7 +6,7 @@ import gzip
 import json
 import struct
 import sys
-from enum import IntEnum, StrEnum
+from enum import IntEnum
 from io import BytesIO
 
 import pytest
@@ -117,6 +117,8 @@ def test_dumps_intenum():
 
 @pytest.mark.skipif(sys.version_info < (3, 11), reason="StrEnum added in 3.11+")
 def test_dumps_strenum():
+    from enum import StrEnum
+
     # StrEnum is a subclass of str, so this should work transparently.
     class X(StrEnum):
         A = "foo"
