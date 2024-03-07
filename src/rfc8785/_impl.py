@@ -189,6 +189,11 @@ def dump(obj: _Value, sink: IO[bytes]) -> None:
             else:
                 sink.write(b"false")
         case int():
+            # Annoyance: int can be subclassed by types like IntEnum,
+            # which then break or change `int.__str__`. Rather than plugging
+            # these individually, we coerce back to `int`.
+            obj = int(obj)
+
             if obj < _INT_MIN or obj > _INT_MAX:
                 raise IntegerDomainError(obj)
             sink.write(str(obj).encode("utf-8"))
