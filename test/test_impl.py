@@ -5,7 +5,7 @@ Internal implementation tests.
 import gzip
 import json
 import struct
-from enum import IntEnum
+from enum import IntEnum, StrEnum
 from io import BytesIO
 
 import pytest
@@ -112,3 +112,14 @@ def test_dumps_intenum():
 
     raw = impl.dumps([X.A, X.B, X.C])
     assert json.loads(raw) == [1, 2, 9001]
+
+
+def test_dumps_strenum():
+    # StrEnum is a subclass of str, so this should work transparently.
+    class X(StrEnum):
+        A = "foo"
+        B = "bar"
+        C = "baz"
+
+    raw = impl.dumps([X.A, X.B, X.C])
+    assert json.loads(raw) == ["foo", "bar", "baz"]
