@@ -11,17 +11,6 @@ import re
 import typing
 from io import BytesIO
 
-_Value = typing.Union[
-    bool,
-    int,
-    str,
-    float,
-    None,
-    typing.List["_Value"],
-    typing.Tuple["_Value"],
-    typing.Dict[str, "_Value"],
-]
-
 _INT_MAX = 2**53 - 1
 _INT_MIN = -(2**53) + 1
 
@@ -176,7 +165,7 @@ def _serialize_float(f: float, sink: typing.IO[bytes]) -> None:
     sink.write(f"{first}{dot}{last}{exponent_str}".encode())
 
 
-def dumps(obj: _Value) -> bytes:
+def dumps(obj: typing.Any) -> bytes:
     """
     Perform JCS serialization of `obj`, returning the canonical serialization
     as `bytes`.
@@ -187,7 +176,7 @@ def dumps(obj: _Value) -> bytes:
     return sink.getvalue()
 
 
-def dump(obj: _Value, sink: typing.IO[bytes]) -> None:
+def dump(obj: typing.Any, sink: typing.IO[bytes]) -> None:
     """
     Perform JCS serialization of `obj` into `sink`.
     """
