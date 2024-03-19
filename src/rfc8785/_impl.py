@@ -9,9 +9,9 @@ from __future__ import annotations
 import math
 import re
 from io import BytesIO
-from typing import IO
+from typing import IO, Union
 
-_Value = bool | int | str | float | None | list["_Value"] | tuple["_Value"] | dict[str, "_Value"]
+_Value = Union[bool, int, str, float, None, list["_Value"], tuple["_Value"], dict[str, "_Value"]]
 
 _INT_MAX = 2**53 - 1
 _INT_MIN = -(2**53) + 1
