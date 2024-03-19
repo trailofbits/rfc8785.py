@@ -203,7 +203,7 @@ def dump(obj: _Value, sink: IO[bytes]) -> None:
         _serialize_str(obj, sink)
     elif isinstance(obj, float):
         _serialize_float(obj, sink)
-    elif isinstance(obj, list | tuple):
+    elif isinstance(obj, (list, tuple)):
         if not obj:
             # Optimization for empty lists.
             sink.write(b"[]")
