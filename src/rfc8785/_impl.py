@@ -17,9 +17,9 @@ _Value = typing.Union[
     str,
     float,
     None,
-    typing.List["_Value"],
+    typing.Sequence["_Value"],
     typing.Tuple["_Value"],
-    typing.Dict[str, "_Value"],
+    typing.Mapping[str, "_Value"],
 ]
 
 _INT_MAX = 2**53 - 1
