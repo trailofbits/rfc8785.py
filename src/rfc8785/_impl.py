@@ -182,59 +182,59 @@ def dump(obj: _Value, sink: IO[bytes]) -> None:
     """
     Perform JCS serialization of `obj` into `sink`.
     """
-    match obj:
-        case bool():
-            if obj is True:
-                sink.write(b"true")
-            else:
-                sink.write(b"false")
-        case int():
-            # Annoyance: int can be subclassed by types like IntEnum,
-            # which then break or change `int.__str__`. Rather than plugging
-            # these individually, we coerce back to `int`.
-            obj = int(obj)
 
-            if obj < _INT_MIN or obj > _INT_MAX:
-                raise IntegerDomainError(obj)
-            sink.write(str(obj).encode("utf-8"))
-        case str():
-            _serialize_str(obj, sink)
-        case float():
-            _serialize_float(obj, sink)
-        case None:
-            sink.write(b"null")
-        case list() | tuple():
-            if not obj:
-                # Optimization for empty lists.
-                sink.write(b"[]")
-                return
+    if obj is None:
+        sink.write(b"null")
+    elif isinstance(obj, bool):
+        if obj is True:
+            sink.write(b"true")
+        else:
+            sink.write(b"false")
+    elif isinstance(obj, int):
+        # Annoyance: int can be subclassed by types like IntEnum,
+        # which then break or change `int.__str__`. Rather than plugging
+        # these individually, we coerce back to `int`.
+        obj = int(obj)
 
-            sink.write(b"[")
-            for idx, elem in enumerate(obj):
-                if idx > 0:
-                    sink.write(b",")
-                dump(elem, sink)
-            sink.write(b"]")
-        case dict():
-            if not obj:
-                # Optimization for empty dicts.
-                sink.write(b"{}")
-                return
+        if obj < _INT_MIN or obj > _INT_MAX:
+            raise IntegerDomainError(obj)
+        sink.write(str(obj).encode("utf-8"))
+    elif isinstance(obj, str):
+        _serialize_str(obj, sink)
+    elif isinstance(obj, float):
+        _serialize_float(obj, sink)
+    elif isinstance(obj, list | tuple):
+        if not obj:
+            # Optimization for empty lists.
+            sink.write(b"[]")
+            return
 
-            # RFC 8785 3.2.3: Objects are sorted by key; keys are ordered
-            # by their UTF-16 encoding. The spec isn't clear about which endianness,
-            # but the examples imply that the big endian encoding is used.
-            obj_sorted = sorted(obj.items(), key=lambda kv: kv[0].encode("utf-16be"))
+        sink.write(b"[")
+        for idx, elem in enumerate(obj):
+            if idx > 0:
+                sink.write(b",")
+            dump(elem, sink)
+        sink.write(b"]")
+    elif isinstance(obj, dict):
+        if not obj:
+            # Optimization for empty dicts.
+            sink.write(b"{}")
+            return
 
-            sink.write(b"{")
-            for idx, (key, value) in enumerate(obj_sorted):
-                if idx > 0:
-                    sink.write(b",")
+        # RFC 8785 3.2.3: Objects are sorted by key; keys are ordered
+        # by their UTF-16 encoding. The spec isn't clear about which endianness,
+        # but the examples imply that the big endian encoding is used.
+        obj_sorted = sorted(obj.items(), key=lambda kv: kv[0].encode("utf-16be"))
 
-                _serialize_str(key, sink)
-                sink.write(b":")
-                dump(value, sink)
+        sink.write(b"{")
+        for idx, (key, value) in enumerate(obj_sorted):
+            if idx > 0:
+                sink.write(b",")
 
-            sink.write(b"}")
-        case _:
-            raise CanonicalizationError(f"unsupported type: {type(obj)}")
+            _serialize_str(key, sink)
+            sink.write(b":")
+            dump(value, sink)
+
+        sink.write(b"}")
+    else:
+        raise CanonicalizationError(f"unsupported type: {type(obj)}")
