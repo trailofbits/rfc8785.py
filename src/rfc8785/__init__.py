@@ -13,7 +13,7 @@ rfc8785.dumps({"anything that can be json serialized": "here"})
 ```
 """
 
-__version__ = "0.0.3"
+__version__ = "0.1.0"
 
 from ._impl import CanonicalizationError, FloatDomainError, IntegerDomainError, dump, dumps
 
