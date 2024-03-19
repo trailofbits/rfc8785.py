@@ -8,10 +8,19 @@ from __future__ import annotations
 
 import math
 import re
+import typing
 from io import BytesIO
-from typing import IO, Union
 
-_Value = Union[bool, int, str, float, None, list["_Value"], tuple["_Value"], dict[str, "_Value"]]
+_Value = typing.Union[
+    bool,
+    int,
+    str,
+    float,
+    None,
+    typing.List["_Value"],
+    typing.Tuple["_Value"],
+    typing.Dict[str, "_Value"],
+]
 
 _INT_MAX = 2**53 - 1
 _INT_MIN = -(2**53) + 1
@@ -69,7 +78,7 @@ class FloatDomainError(CanonicalizationError):
         super().__init__(f"{f} is not representable in JCS")
 
 
-def _serialize_str(s: str, sink: IO[bytes]) -> None:
+def _serialize_str(s: str, sink: typing.IO[bytes]) -> None:
     """
     Serialize a string as a JSON string, per RFC 8785 3.2.2.2.
     """
@@ -87,7 +96,7 @@ def _serialize_str(s: str, sink: IO[bytes]) -> None:
     sink.write(b'"')
 
 
-def _serialize_float(f: float, sink: IO[bytes]) -> None:
+def _serialize_float(f: float, sink: typing.IO[bytes]) -> None:
     """
     Serialize a floating point number to a stable string format, as
     defined in ECMA 262 7.1.12.1 and amended by RFC 8785 3.2.2.3.
@@ -178,7 +187,7 @@ def dumps(obj: _Value) -> bytes:
     return sink.getvalue()
 
 
-def dump(obj: _Value, sink: IO[bytes]) -> None:
+def dump(obj: _Value, sink: typing.IO[bytes]) -> None:
     """
     Perform JCS serialization of `obj` into `sink`.
     """
