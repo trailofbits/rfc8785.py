@@ -127,3 +127,8 @@ def test_dumps_strenum():
 
     raw = impl.dumps([X.A, X.B, X.C])
     assert json.loads(raw) == ["foo", "bar", "baz"]
+
+
+def test_dumps_nonstring_key():
+    with pytest.raises(impl.CanonicalizationError, match="object keys must be strings"):
+        impl.dumps({1: 2, None: 3})
