@@ -6,7 +6,7 @@ import gzip
 import json
 import struct
 import sys
-from enum import IntEnum
+from enum import Enum, IntEnum
 from io import BytesIO
 
 import pytest
@@ -127,6 +127,40 @@ def test_dumps_strenum():
 
     raw = impl.dumps([X.A, X.B, X.C])
     assert json.loads(raw) == ["foo", "bar", "baz"]
+
+
+def test_dumps_enum_multiple_inheritance():
+    # Manually inheriting str, Enum should also work.
+    class X(str, Enum):
+        A = "foo"
+        B = "bar"
+        C = "baz"
+
+    raw = impl.dumps([X.A, X.B, X.C])
+    assert json.loads(raw) == ["foo", "bar", "baz"]
+
+    # Same for other JSON-able enum types.
+    class Y(dict, Enum):
+        A = {"A": "foo"}
+        B = {"B": "bar"}
+        C = {"C": "baz"}
+
+    raw = impl.dumps([Y.A, Y.B, Y.C])
+    assert json.loads(raw) == [{"A": "foo"}, {"B": "bar"}, {"C": "baz"}]
+
+
+def test_dumps_bare_enum():
+    class X(Enum):
+        A = "1"
+        B = 2
+        C = 3.0
+
+    raw = impl.dumps([X.A, X.B, X.C])
+    assert json.loads(raw) == ["1", 2, 3.0]
+
+    # Python's own json doesn't currently allow this.
+    with pytest.raises(TypeError):
+        json.dumps([X.A, X.B, X.C])
 
 
 def test_dumps_nonstring_key():

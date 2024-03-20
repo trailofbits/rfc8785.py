@@ -6,6 +6,7 @@ This module is NOT a public API, and is not considered stable.
 
 from __future__ import annotations
 
+import enum
 import math
 import re
 import typing
@@ -192,6 +193,18 @@ def dump(obj: _Value, sink: typing.IO[bytes]) -> None:
     Perform JCS serialization of `obj` into `sink`.
     """
 
+    # Enums are a pain, since they're frequently subclasses of int, str,
+    # etc. but don't necessarily have the same `__str__` behavior.
+    # We handle them by taking their inner value.
+    # The maximally generic thing to do would be to unwrap nested enums,
+    # but the json stdlib implementation doesn't do that either.
+    #
+    # NOTE: This is slightly more permissive than the stdlib's `json`,
+    # which will reject an enum that *isn't* also inherited from another
+    # type besides `enum.Enum`.
+    if isinstance(obj, enum.Enum):
+        obj = obj.value
+
     if obj is None:
         sink.write(b"null")
     elif isinstance(obj, bool):
@@ -200,11 +213,6 @@ def dump(obj: _Value, sink: typing.IO[bytes]) -> None:
         else:
             sink.write(b"false")
     elif isinstance(obj, int):
-        # Annoyance: int can be subclassed by types like IntEnum,
-        # which then break or change `int.__str__`. Rather than plugging
-        # these individually, we coerce back to `int`.
-        obj = int(obj)
-
         if obj < _INT_MIN or obj > _INT_MAX:
             raise IntegerDomainError(obj)
         sink.write(str(obj).encode("utf-8"))
