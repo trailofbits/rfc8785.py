@@ -233,7 +233,11 @@ def dump(obj: _Value, sink: typing.IO[bytes]) -> None:
         # RFC 8785 3.2.3: Objects are sorted by key; keys are ordered
         # by their UTF-16 encoding. The spec isn't clear about which endianness,
         # but the examples imply that the big endian encoding is used.
-        obj_sorted = sorted(obj.items(), key=lambda kv: kv[0].encode("utf-16be"))
+        try:
+            obj_sorted = sorted(obj.items(), key=lambda kv: kv[0].encode("utf-16be"))
+        except AttributeError:
+            # Failing to call `encode()` indicates that a key isn't a string.
+            raise CanonicalizationError("object keys must be strings")
 
         sink.write(b"{")
         for idx, (key, value) in enumerate(obj_sorted):
