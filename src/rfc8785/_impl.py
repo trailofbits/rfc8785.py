@@ -12,12 +12,10 @@ import re
 import typing
 from io import BytesIO
 
+_Scalar = typing.Union[bool, int, str, float, None]
+
 _Value = typing.Union[
-    bool,
-    int,
-    str,
-    float,
-    None,
+    _Scalar,
     typing.Sequence["_Value"],
     typing.Tuple["_Value"],
     typing.Mapping[str, "_Value"],
@@ -193,34 +191,29 @@ def dump(obj: _Value, sink: typing.IO[bytes]) -> None:
     Perform JCS serialization of `obj` into `sink`.
     """
 
-    # Enums are a pain, since they're frequently subclasses of int, str,
-    # etc. but don't necessarily have the same `__str__` behavior.
-    # We handle them by taking their inner value.
-    # The maximally generic thing to do would be to unwrap nested enums,
-    # but the json stdlib implementation doesn't do that either.
-    #
-    # NOTE: This is slightly more permissive than the stdlib's `json`,
-    # which will reject an enum that *isn't* also inherited from another
-    # type besides `enum.Enum`.
-    if isinstance(obj, enum.Enum):
-        obj = obj.value
-
     if obj is None:
         sink.write(b"null")
     elif isinstance(obj, bool):
+        obj = bool(obj)
         if obj is True:
             sink.write(b"true")
         else:
             sink.write(b"false")
     elif isinstance(obj, int):
+        obj = int(obj)
         if obj < _INT_MIN or obj > _INT_MAX:
             raise IntegerDomainError(obj)
         sink.write(str(obj).encode("utf-8"))
     elif isinstance(obj, str):
+        # NOTE: We don't coerce with `str(...)`` here, since that will do
+        # the wrong thing for `(str, Enum)` subtypes where `__str__` is
+        # `Enum.__str__`.
         _serialize_str(obj, sink)
     elif isinstance(obj, float):
+        obj = float(obj)
         _serialize_float(obj, sink)
     elif isinstance(obj, (list, tuple)):
+        obj = list(obj)
         if not obj:
             # Optimization for empty lists.
             sink.write(b"[]")
@@ -233,6 +226,7 @@ def dump(obj: _Value, sink: typing.IO[bytes]) -> None:
             dump(elem, sink)
         sink.write(b"]")
     elif isinstance(obj, dict):
+        obj = dict(obj)
         if not obj:
             # Optimization for empty dicts.
             sink.write(b"{}")
