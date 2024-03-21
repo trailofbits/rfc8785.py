@@ -6,7 +6,6 @@ This module is NOT a public API, and is not considered stable.
 
 from __future__ import annotations
 
-import enum
 import math
 import re
 import typing
