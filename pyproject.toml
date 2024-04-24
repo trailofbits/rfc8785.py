@@ -35,8 +35,8 @@ dev = ["rfc8785[doc,test,lint]", "build"]
 [project.urls]
 Homepage = "https://pypi.org/project/rfc8785"
 Documentation = "https://trailofbits.github.io/rfc8785.py/"
-Issues = "https://github.com/trailofbits/rfc8785/issues"
-Source = "https://github.com/trailofbits/rfc8785"
+Issues = "https://github.com/trailofbits/rfc8785.py/issues"
+Source = "https://github.com/trailofbits/rfc8785.py"
 
 [tool.flit.module]
 name = "rfc8785"
