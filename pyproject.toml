@@ -41,6 +41,9 @@ Source = "https://github.com/trailofbits/rfc8785.py"
 [tool.flit.module]
 name = "rfc8785"
 
+[tool.flit.sdist]
+include = ["test"]
+
 [tool.mypy]
 mypy_path = "src"
 packages = "rfc8785"
