@@ -10,6 +10,7 @@ from enum import Enum, IntEnum
 from io import BytesIO
 
 import pytest
+
 import rfc8785._impl as impl
 
 
