@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/pypi-attestations
+      url: https://pypi.org/p/rfc8785
     needs: [build]
     permissions:
       id-token: write # trusted publishing + attestations
