@@ -81,7 +81,7 @@ def _serialize_str(s: str, sink: typing.IO[bytes]) -> None:
     Serialize a string as a JSON string, per RFC 8785 3.2.2.2.
     """
 
-    def _replace(match: re.Match) -> str:
+    def _replace(match: re.Match[str]) -> str:
         return _ESCAPE_DCT[match.group(0)]
 
     sink.write(b'"')

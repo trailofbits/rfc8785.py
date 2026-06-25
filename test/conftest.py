@@ -16,7 +16,7 @@ def vector() -> Callable[[str], tuple[bytes, bytes, bytes]]:
         output = _ASSETS / f"output/{name}.json"
         outhex = _ASSETS / f"outhex/{name}.txt"
 
-        return (input.read_bytes(), output.read_bytes(), bytearray.fromhex(outhex.read_text()))
+        return (input.read_bytes(), output.read_bytes(), bytes.fromhex(outhex.read_text()))
 
     return _vector
 
