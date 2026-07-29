@@ -20,6 +20,14 @@ _Value = typing.Union[
     typing.Mapping[str, "_Value"],
 ]
 
+# The "safe integer" range, per RFC 8785 Appendix B, Note 1. This is slightly
+# stricter than RFC 8785 3.1's JSON number data requirement, which states that
+# numbers MUST be expressible as IEEE 754 double-precision values.
+#
+# For integers equal or greater than 2**53, only some are exactly representable
+# by IEEE 754 double-precision values. Instead of allowing them (which is what
+# section 3.1 implies), we follow Appendix B Note 1, which suggests supporting
+# only the range of integers which is exactly representable.
 _INT_MAX = 2**53 - 1
 _INT_MIN = -(2**53) + 1
 
@@ -51,8 +59,13 @@ class CanonicalizationError(ValueError):
 
 class IntegerDomainError(CanonicalizationError):
     """
-    The given integer exceeds the true integer precision of an
-    IEEE 754 double-precision float, which is what JSON uses.
+    The given integer lies outside the "safe integer" range of an IEEE 754
+    double-precision float, i.e. the range within which every integer and its
+    neighbors are exactly representable.
+
+    This is the interoperability range recommended by RFC 8785, Appendix B,
+    Note 1, and is marginally stricter than the IEEE 754 double precision
+    representability that RFC 8785 3.1 requires.
     """
 
     def __init__(self, n: int) -> None:
