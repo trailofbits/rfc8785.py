@@ -9,16 +9,12 @@ from __future__ import annotations
 import math
 import re
 import typing
+from collections.abc import Mapping, Sequence
 from io import BytesIO
 
-_Scalar = typing.Union[bool, int, str, float, None]
+_Scalar: typing.TypeAlias = bool | int | str | float | None
 
-_Value = typing.Union[
-    _Scalar,
-    typing.Sequence["_Value"],
-    typing.Tuple["_Value"],
-    typing.Mapping[str, "_Value"],
-]
+_Value: typing.TypeAlias = _Scalar | Sequence["_Value"] | tuple["_Value"] | Mapping[str, "_Value"]
 
 # The "safe integer" range, per RFC 8785 Appendix B, Note 1. This is slightly
 # stricter than RFC 8785 3.1's JSON number data requirement, which states that

@@ -13,7 +13,7 @@ classifiers = [
     "Topic :: Security :: Cryptography",
 ]
 dependencies = []
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 
 [tool.setuptools.dynamic]
 version = { attr = "rfc8785.__version__" }
@@ -44,6 +44,7 @@ name = "rfc8785"
 include = ["test"]
 
 [tool.mypy]
+python_version = "3.10"
 mypy_path = "src"
 packages = "rfc8785"
 allow_redefinition = true
