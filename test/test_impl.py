@@ -102,7 +102,7 @@ def test_string_invalid_utf8():
 def test_dumps_invalid_type():
     with pytest.raises(impl.CanonicalizationError):
         # set is not serializable
-        impl.dumps({1, 2, 3})
+        impl.dumps({1, 2, 3})  # type: ignore[arg-type]
 
 
 def test_dumps_intenum():
@@ -141,7 +141,7 @@ def test_dumps_enum_multiple_inheritance():
     assert json.loads(raw) == ["foo", "bar", "baz"]
 
     # Same for other JSON-able enum types.
-    class Y(dict, Enum):
+    class Y(dict[str, str], Enum):  # type: ignore[misc]
         A = {"A": "foo"}
         B = {"B": "bar"}
         C = {"C": "baz"}
@@ -166,9 +166,9 @@ def test_dumps_bare_enum_fails():
 
     # Python's json doesn't allow this, so we don't either.
     with pytest.raises(impl.CanonicalizationError, match="unsupported type"):
-        impl.dumps([X.A, X.B, X.C])
+        impl.dumps([X.A, X.B, X.C])  # type: ignore[list-item]
 
 
 def test_dumps_nonstring_key():
     with pytest.raises(impl.CanonicalizationError, match="object keys must be strings"):
-        impl.dumps({1: 2, None: 3})
+        impl.dumps({1: 2, None: 3})  # type: ignore[dict-item]
